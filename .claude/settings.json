@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install*)",
+      "Bash(npm run *)",
+      "Bash(npm audit*)",
+      "Bash(npx expo*)",
+      "Bash(npx tsc*)",
+      "Bash(node dist/*)",
+      "Bash(ls*)",
+      "Bash(find /Volumes/T9/workspace/mobivis*)",
+      "Bash(mkdir -p /Volumes/T9/workspace/mobivis*)",
+      "Bash(git *)"
+    ],
+    "deny": [
+      "Bash(rm -rf /*)",
+      "Bash(find /*)"
+    ]
+  }
+}
