@@ -1,0 +1,8 @@
+{
+  "name": "mobivis",
+  "private": true,
+  "workspaces": [
+    "server",
+    "mobile"
+  ]
+}
