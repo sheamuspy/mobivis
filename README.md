@@ -54,21 +54,18 @@ Keep this terminal open. **Copy the `ws://` URL** — you'll need it in the next
 
 ## 2. Mobile app (phone)
 
-Install dependencies using Expo's resolver (this ensures all packages match SDK 52):
-
-```bash
-cd mobivis/mobile
-node_modules/.bin/expo install   # first time only — after npm install
-```
-
-Or from a fresh clone:
+Install dependencies:
 
 ```bash
 cd mobivis/mobile
 npm install --legacy-peer-deps
 ```
 
-### Start the app
+There are two ways to run the app on your phone:
+
+---
+
+### Option A — Expo Go (quickest, same Wi-Fi required)
 
 ```bash
 npx expo start
@@ -79,7 +76,56 @@ A QR code will appear in the terminal.
 1. **iOS** — open the Camera app and scan the QR code
 2. **Android** — open Expo Go, tap **Scan QR code**, and scan
 
-The MobiVis app will open on your phone.
+The MobiVis app will open inside Expo Go.
+
+---
+
+### Option B — Native build via Xcode (recommended, no Wi-Fi dependency)
+
+This installs MobiVis as a standalone app directly on your iPhone, removing the need for Expo Go or a shared network.
+
+**Prerequisites:** Xcode installed, iPhone connected via USB.
+
+**1. Install a modern Ruby** (the macOS system Ruby 2.6 is too old for CocoaPods):
+
+```bash
+brew install ruby
+/opt/homebrew/opt/ruby/bin/gem install cocoapods --no-document
+```
+
+**2. Build the native project:**
+
+```bash
+cd mobivis/mobile
+PATH="/opt/homebrew/lib/ruby/gems/4.0.0/bin:/opt/homebrew/opt/ruby/bin:$PATH" \
+  node_modules/.bin/expo run:ios --device "Your iPhone Name"
+```
+
+The device name is shown in Xcode's device picker or in **Settings → General → About → Name** on your iPhone.
+
+**3. First-time code signing setup:**
+
+If Xcode reports a signing error, open the generated project:
+
+```bash
+open /Volumes/T9/workspace/mobivis/mobile/ios/MobiVis.xcworkspace
+```
+
+Then in Xcode:
+1. Click the **MobiVis** root project in the left navigator
+2. Select the **MobiVis** target under TARGETS
+3. Go to **Signing & Capabilities**
+4. Check **Automatically manage signing**
+5. Under **Team**, pick your Apple ID (add one via **Xcode → Settings → Accounts → +** if needed)
+6. Press **⌘R** to build and install
+
+**4. Trust the developer certificate on your iPhone:**
+
+Go to **Settings → General → VPN & Device Management**, find your Apple ID under Developer App, and tap **Trust**.
+
+> **Note for Xcode 26 users:** The project Podfile already includes a fix for a `fmt` / `consteval` incompatibility introduced in Xcode 26's Clang compiler. No extra steps needed.
+
+After the first build, subsequent runs are fast — Metro hot-reload works over USB without needing Wi-Fi.
 
 ---
 
@@ -123,3 +169,26 @@ You'll land on the **Feed** screen. Now edit and save any file inside the watche
 **Expo Go shows a blank screen or crashes**
 - Run `node_modules/.bin/expo install --check` inside `mobile/` to verify dependency versions
 - Delete `mobile/node_modules` and re-run `npm install --legacy-peer-deps`
+
+---
+
+## Next steps
+
+### Diff view — show only changed hunks, not the whole file
+
+Currently the diff viewer sends every line of a file (unchanged lines included), which makes large files noisy and slow to scroll. The improvement is to collapse unchanged lines into a collapsed hunk indicator (e.g. `··· 42 unchanged lines ···`) and only expand them on tap — the same pattern used by GitHub's diff view. This keeps the signal-to-noise ratio high and makes it obvious at a glance what actually changed.
+
+Work needed:
+- Server: group consecutive unchanged lines into `hunk` objects before broadcasting, reducing payload size
+- Mobile `DiffScreen`: render collapsed hunk rows between changed blocks, with a tap-to-expand interaction
+- Mobile `ChangeCard`: the 4-line preview already filters to changed lines only — no change needed there
+
+### Cross-network support — connect without shared Wi-Fi
+
+Currently the phone and laptop must be on the same local network. To remove that constraint the WebSocket traffic needs to be tunnelled over the internet. Two options in order of simplicity:
+
+**Option A — ngrok tunnel (zero infrastructure)**
+Run `ngrok http 4747` alongside the server. ngrok prints a public `wss://` URL that works from anywhere. The server needs no changes; the mobile app just uses the ngrok URL instead of the local IP. Downside: free ngrok sessions expire after a few hours and have bandwidth limits.
+
+**Option B — self-hosted relay server**
+Deploy a small WebSocket relay (e.g. a Node process on Railway, Fly.io, or a VPS) that the laptop connects to as a publisher and the phone connects to as a subscriber. This gives a stable permanent URL with no session limits. The server and mobile `useWebSocket` hook both need a mode switch to talk to the relay instead of directly to each other.
