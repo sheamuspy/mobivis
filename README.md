@@ -17,43 +17,16 @@ Sync files from your computer to your phone in real-time. Review code, make edit
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           MOBIVIS ARCHITECTURE                           │
-└─────────────────────────────────────────────────────────────────────────┘
+![Mobivis Architecture](./docs/architecture.excalidraw.png)
 
-   ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
-   │   COMPUTER    │         │   INTERNET   │         │    PHONE     │
-   │              │         │              │         │              │
-   │  ┌────────┐  │         │              │         │  ┌────────┐  │
-   │  │ Server │◄─┼─────────┼──────────────┼─────────┼─►│  App   │  │
-   │  │  (WS)  │  │  WebSocket              │         │  │(Expo)  │  │
-   │  └────────┘  │         │              │         │  └────────┘  │
-   │      │      │         │              │         │      │      │
-   │      ▼      │         │              │         │      ▼      │
-   │  ┌────────┐  │         │              │         │  ┌────────┐  │
-   │  │chokidar│  │         │              │         │  │ File   │  │
-   │  │(watch)│  │         │              │         │  │  Tree  │  │
-   │  └────────┘  │         │              │         │  └────────┘  │
-   │      │      │         │              │         │      │      │
-   │      ▼      │         │              │         │      ▼      │
-   │  ┌────────┐  │         │              │         │  ┌────────┐  │
-   │  │  File  │  │         │              │         │  │Monaco  │  │
-   │  │ System │  │         │              │         │  │ Editor │  │
-   │  └────────┘  │         │              │         │  │(WebView)│  │
-   └──────────────┘         │              │         └──────────────┘
-                            └──────────────┘
+**Components:**
 
-   ┌─────────────────────┐         ┌─────────────────────┐
-   │      SERVER         │         │      MOBILE         │
-   │                     │         │                     │
-   │  • File watching    │◄───────►│  • Real-time sync   │
-   │  • WS broadcasting │         │  • Monaco editor    │
-   │  • Read/write ops   │         │  • Resizable sidebar│
-   │  • Tree building    │         │  • Tabbed files     │
-   │                     │         │  • Syntax highlight │
-   └─────────────────────┘         └─────────────────────┘
-```
+| Layer | Technology | Purpose |
+|-------|------------|---------|
+| Mobile | React Native, Expo | UI and Monaco WebView |
+| Editor | Monaco Editor | Code editing with syntax highlighting |
+| Sync | WebSocket, Chokidar | Real-time file sync |
+| Server | Node.js, ws | File watching and broadcasting |
 
 ---
 
