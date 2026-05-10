@@ -88,7 +88,7 @@ const MONACO_HTML = `
 
     function setFontSize(size) {
       if (editor) {
-        editor.updateOptions({ fontSize: size || 14 });
+        editor.updateOptions({ fontSize: parseInt(size) || 14 });
       }
     }
 

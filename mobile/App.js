@@ -39,8 +39,8 @@ export default function App() {
 
   // Settings state
   const [settings, setSettings] = useState({
-    fontSize: '14',
-    tabSize: '2',
+    fontSize: 14,
+    tabSize: 2,
     wordWrap: true,
     theme: 'vs-dark',
     minimap: false,
@@ -148,6 +148,17 @@ export default function App() {
             <Text style={styles.hamburgerIcon}>☰</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Mobivis</Text>
+          {currentFile && (
+            <TouchableOpacity 
+              style={styles.breadcrumb}
+              onPress={() => setShowSidebar(true)}
+            >
+              <Text style={styles.breadcrumbText} numberOfLines={1}>
+                {currentFile.path}
+              </Text>
+              <Text style={styles.breadcrumbIcon}>▾</Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.topBarRight}>
           <TouchableOpacity 
@@ -211,6 +222,11 @@ export default function App() {
           <MonacoEditor
             file={currentFile}
             theme={settings.theme}
+            fontSize={settings.fontSize}
+            tabSize={settings.tabSize}
+            wordWrap={settings.wordWrap}
+            lineNumbers={settings.lineNumbers}
+            minimap={settings.minimap}
             onContentChange={handleContentChange}
             onCursorChange={(line, col) => setCursorPos({ line, col })}
           />
@@ -312,14 +328,14 @@ export default function App() {
                 <View style={styles.numberInput}>
                   <TouchableOpacity 
                     style={styles.numberBtn}
-                    onPress={() => updateSetting('fontSize', String(Math.max(10, parseInt(settings.fontSize) - 1)))}
+                    onPress={() => updateSetting('fontSize', Math.max(10, settings.fontSize - 1))}
                   >
                     <Text style={styles.numberBtnText}>−</Text>
                   </TouchableOpacity>
                   <Text style={styles.numberValue}>{settings.fontSize}</Text>
                   <TouchableOpacity 
                     style={styles.numberBtn}
-                    onPress={() => updateSetting('fontSize', String(Math.min(24, parseInt(settings.fontSize) + 1)))}
+                    onPress={() => updateSetting('fontSize', Math.min(24, settings.fontSize + 1))}
                   >
                     <Text style={styles.numberBtnText}>+</Text>
                   </TouchableOpacity>
@@ -331,14 +347,14 @@ export default function App() {
                 <View style={styles.numberInput}>
                   <TouchableOpacity 
                     style={styles.numberBtn}
-                    onPress={() => updateSetting('tabSize', String(Math.max(2, parseInt(settings.tabSize) - 1)))}
+                    onPress={() => updateSetting('tabSize', Math.max(2, settings.tabSize - 1))}
                   >
                     <Text style={styles.numberBtnText}>−</Text>
                   </TouchableOpacity>
                   <Text style={styles.numberValue}>{settings.tabSize}</Text>
                   <TouchableOpacity 
                     style={styles.numberBtn}
-                    onPress={() => updateSetting('tabSize', String(Math.min(8, parseInt(settings.tabSize) + 1)))}
+                    onPress={() => updateSetting('tabSize', Math.min(8, settings.tabSize + 1))}
                   >
                     <Text style={styles.numberBtnText}>+</Text>
                   </TouchableOpacity>
@@ -440,8 +456,10 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   topBarLeft: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    minWidth: 0,
   },
   topBarRight: {
     flexDirection: 'row',
@@ -459,7 +477,28 @@ const styles = StyleSheet.create({
   title: { 
     color: '#ffffff', 
     fontSize: 18, 
-    fontWeight: 'bold' 
+    fontWeight: 'bold',
+    marginRight: 8,
+  },
+  breadcrumb: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#3c3c3c',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 4,
+    maxWidth: '60%',
+  },
+  breadcrumbText: {
+    color: '#cccccc',
+    fontSize: 12,
+    flexShrink: 1,
+  },
+  breadcrumbIcon: {
+    color: '#6b6b6b',
+    fontSize: 10,
+    marginLeft: 4,
   },
   iconBtn: {
     padding: 8,
