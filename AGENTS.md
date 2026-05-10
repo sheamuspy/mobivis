@@ -19,7 +19,20 @@
 
 ## Protected Branches
 - `main` - production code, requires PR
-- `development` - do not push directly, use feature branches
+- `development` - requires PR, never push or merge directly
+
+## Merging
+- **NEVER** merge to `development` directly - always via Pull Request
+- Create PR from feature branch → development
+- Get approval before merging
+- Delete feature branch after merge
+
+## Pull Requests
+1. Create PR with descriptive title and summary
+2. Link related issues
+3. Request review from team members
+4. Address review feedback
+5. Do not merge without approval
 
 ## Destructive Actions
 - **NEVER** force push to shared branches
