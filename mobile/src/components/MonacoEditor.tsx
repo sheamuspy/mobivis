@@ -24,8 +24,8 @@ const MONACO_HTML = `
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { width: 100%; height: 100%; overflow: hidden; }
-    body { overflow: auto; }
-    #container { width: 100%; height: 100%; overflow: auto; }
+    body { overflow: auto; -webkit-overflow-scrolling: touch; }
+    #container { width: max-content; min-width: 100%; height: 100%; }
   </style>
 </head>
 <body>
