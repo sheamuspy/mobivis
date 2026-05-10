@@ -1,13 +1,5 @@
 # Mobivis
 
-```
- ███▄    █  ██▓  ▄████▄   ██▓     ██▓     ▒█████   ██▀███ ▓██   ██▓
- ██ ▀█   █  ▓██▒ ▒██▀ ▀█  ▓██▒    ▓██▒    ▒██▒  ██▒▓██ ▒ ██▒▒██  ██▒
-▓██  ▀█ ██▒▒██▒  ▒▓█    ▄ ▒██░    ▒██░    ▒██░  ██▒▓██ ░▄█ ▒ ▒██ ██░
-▓██▒  ▐▌██▒░██░  ▒▓▓▄ ▄██▒▒██░    ▒██░    ▒██   ██░▒██▀▀█▄   ░ ▐██▓░
-▒██░   ▓██░░██░  ▒ ▓███▀ ░░██████▒░██████▒░ ████▓▒░░██▓ ▒██▒ ░ ██▒▓░
-```
-
 **Mobile-first code editor for agentic development**
 
 Sync files from your computer to your phone in real-time. Review code, make edits, and stay productive on the go.
